@@ -20,10 +20,16 @@ All three commands use Pi's built-in `copyToClipboard`, which handles the platfo
 
 ## Install
 
-Clone this repository and register the checkout as a local Pi package:
+Install from GitHub; Pi clones it and `pi update --extensions` keeps it current:
 
 ```sh
-pi install /absolute/path/to/clipboard-tools
+pi install git:github.com/shardrunner/pi-clipboard-tools
+```
+
+For development, register a local checkout instead:
+
+```sh
+pi install /absolute/path/to/pi-clipboard-tools
 ```
 
 Pi loads a local package in place (no copy) and this package has no runtime
