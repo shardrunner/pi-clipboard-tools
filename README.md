@@ -10,7 +10,7 @@ printf '%s\n' 'hello world'
 ```
 ````
 
-The entire block is copied (including any multiple commands and intentional internal newlines), without the fence or final formatting newline. Unlabelled blocks, inline code, tool output and abandoned session branches are ignored. If there is no matching block, your clipboard is left alone. Clipboard errors appear as notifications. In non-interactive Pi modes, the command is not useful; it is intended for the TUI.
+The entire block is copied (including any multiple commands and intentional internal newlines), without the fence or final formatting newline. Unlabelled blocks, inline code, tool output and abandoned session branches are ignored. If there is no matching block, your clipboard is left alone. Clipboard errors appear as notifications. All three commands require TUI mode; print, JSON, and RPC invocations are rejected before clipboard access.
 
 Run `/copy-code` to copy the **last complete fenced code block** in an assistant message on the current session branch, regardless of language (including unlabelled fences). It preserves the block's internal newlines but omits the fence and final formatting newline. Inline code, tool output, incomplete fences and abandoned branches are ignored. If no block is found, the clipboard is left alone.
 

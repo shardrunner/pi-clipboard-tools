@@ -18,11 +18,13 @@ function commandFixture(copy: (text: string) => Promise<void>) {
   return {
     handlers,
     notices,
-    async run(name: string, branch: readonly unknown[]) {
+    async run(name: string, branch: readonly unknown[], mode = "tui") {
       const handler = handlers.get(name);
       assert.ok(handler, `Command ${name} was not registered`);
       // Stub only the context fields these commands use.
       await handler("", {
+        mode,
+        hasUI: mode === "tui" || mode === "rpc",
         sessionManager: { getBranch: () => branch },
         ui: { notify: (message: string, type: string) => notices.push([message, type]) },
       } as unknown as Parameters<Handler>[1]);
@@ -121,6 +123,22 @@ test("reports missing commands without replacing the clipboard", async () => {
   await run("copy-command", [assistant("No commands here.")]);
   assert.equal(copied, false);
   assert.match(notices[0][0], /No shell code block/);
+});
+
+test("all copy commands reject non-TUI modes without clipboard or UI writes", async () => {
+  let copies = 0;
+  const { run, notices } = commandFixture(async () => { copies++; });
+  const branch = [
+    assistant("```bash\necho safe\n```"),
+    { type: "message", message: { role: "user", content: "user input" } },
+  ];
+  for (const mode of ["print", "json", "rpc"]) {
+    for (const name of ["copy-command", "copy-code", "copy-input"]) {
+      await assert.rejects(run(name, branch, mode), /only available in TUI mode/);
+    }
+  }
+  assert.equal(copies, 0);
+  assert.deepEqual(notices, []);
 });
 
 test("clipboard failures are visible", async () => {

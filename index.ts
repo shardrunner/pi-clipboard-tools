@@ -55,6 +55,7 @@ export function register(pi: ExtensionAPI, copy: (text: string) => Promise<void>
   pi.registerCommand("copy-command", {
     description: "Copy the last assistant shell code block (bash/sh/zsh/shell) on this branch",
     handler: async (_args, ctx) => {
+      if (ctx.mode !== "tui") throw new Error("/copy-command is only available in TUI mode.");
       const command = lastShellBlock(ctx.sessionManager.getBranch());
       if (!command) {
         ctx.ui.notify("No shell code block found on this branch.", "warning");
@@ -72,6 +73,7 @@ export function register(pi: ExtensionAPI, copy: (text: string) => Promise<void>
   pi.registerCommand("copy-code", {
     description: "Copy the last assistant fenced code block on this branch",
     handler: async (_args, ctx) => {
+      if (ctx.mode !== "tui") throw new Error("/copy-code is only available in TUI mode.");
       const code = lastCodeBlock(ctx.sessionManager.getBranch());
       if (!code) {
         ctx.ui.notify("No code block found on this branch.", "warning");
@@ -89,6 +91,7 @@ export function register(pi: ExtensionAPI, copy: (text: string) => Promise<void>
   pi.registerCommand("copy-input", {
     description: "Copy the last user input on this branch",
     handler: async (_args, ctx) => {
+      if (ctx.mode !== "tui") throw new Error("/copy-input is only available in TUI mode.");
       const input = lastUserInput(ctx.sessionManager.getBranch());
       if (!input) {
         ctx.ui.notify("No text in the last user input on this branch.", "warning");
