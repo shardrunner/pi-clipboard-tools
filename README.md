@@ -1,5 +1,7 @@
 # Clipboard tools
 
+> **Disclaimer:** This extension is vibe coded. Use at your own risk.
+
 Run `/copy-command` in Pi to copy the **last complete shell-fenced code block** in an assistant message on the current session branch to the system clipboard. Pi copies the original text, not the visually wrapped terminal output. Paste it into a shell yourself after reviewing it; the extension never executes commands.
 
 Supported fence labels: `bash`, `sh`, `zsh`, `shell`. For example:
