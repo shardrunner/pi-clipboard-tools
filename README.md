@@ -1,10 +1,16 @@
 # Clipboard tools
 
-> **Disclaimer:** This extension is vibe coded for personal use. Use at your own risk.
+Copy code and previous prompts from [Pi](https://pi.dev) without picking up the
+terminal's visual line wrapping. Commands copy the original conversation text;
+they never execute it.
+
+## Use
 
 Run `/copy-command` in Pi to copy the **last complete shell-fenced code block** in an assistant message on the current session branch to the system clipboard. Pi copies the original text, not the visually wrapped terminal output. Paste it into a shell yourself after reviewing it; the extension never executes commands.
 
-Supported fence labels: `bash`, `sh`, `zsh`, `shell`. For example:
+Supported fence labels: `bash`, `sh`, `zsh`, `shell`. Closing fences must use the
+same marker (backticks or tildes) and be at least as long as the opening fence.
+For example:
 
 ````markdown
 ```bash
@@ -37,5 +43,12 @@ pi install /absolute/path/to/pi-clipboard-tools
 Pi loads a local package in place (no copy) and this package has no runtime
 dependencies, so no `npm install` is needed to use it. Run `/reload` in existing
 Pi instances. Try it once without installing via `pi -e /absolute/path/to/clipboard-tools`.
+
+## Project status
+
+Developed with AI assistance for personal use. Provided as-is, without support or
+compatibility guarantees. Review the source and documented limitations before use.
+
+## Development
 
 Run tests with `npm ci --ignore-scripts && npm run check` (Node 24+).
