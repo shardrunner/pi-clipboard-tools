@@ -14,10 +14,12 @@ function lastBlock(entries: readonly unknown[], shellOnly: boolean): string | un
     for (const block of entry.message.content) {
       if (block?.type !== "text" || typeof block.text !== "string") continue;
       // Scan *all* fences, including non-shell ones, to avoid treating their contents as prose.
-      const fence = /^ {0,3}(`{3,}|~{3,})([^\r\n]*)\r?\n([\s\S]*?)^ {0,3}\1[ \t]*(?:\r?\n|$)/gm;
+      // Capture the full opener without backtracking to a shorter run. A close
+      // must use the same marker and be at least as long as that opener.
+      const fence = /^ {0,3}((`|~)\2{2,})(?!\2)([^\r\n]*)\r?\n([\s\S]*?)^ {0,3}\1\2*[ \t]*(?:\r?\n|$)/gm;
       for (const match of block.text.matchAll(fence)) {
-        if (shellOnly && !shellLanguages.has(match[2].trim().toLowerCase())) continue;
-        const command = match[3].replace(/\r?\n$/, "");
+        if (shellOnly && !shellLanguages.has(match[3].trim().toLowerCase())) continue;
+        const command = match[4].replace(/\r?\n$/, "");
         if (command.trim()) latest = command;
       }
     }

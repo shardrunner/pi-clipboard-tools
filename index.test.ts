@@ -58,6 +58,42 @@ test("copy-code copies the last complete assistant fence, including unlabelled b
   assert.deepEqual(notices, [["Copied code block to clipboard.", "info"]]);
 });
 
+test("copies blocks closed by longer matching fences", async () => {
+  for (const marker of ["`", "~"]) {
+    const text = `${marker.repeat(3)}bash\necho safe\n  echo kept\n${marker.repeat(5)}`;
+    const branch = [assistant(text)];
+    const expected = "echo safe\n  echo kept";
+    const copied: string[] = [];
+    const { run } = commandFixture(async (value) => { copied.push(value); });
+    assert.equal(lastShellBlock(branch), expected);
+    assert.equal(lastCodeBlock(branch), expected);
+    await run("copy-command", branch);
+    await run("copy-code", branch);
+    assert.deepEqual(copied, [expected, expected]);
+  }
+});
+
+test("rejects closing fences that are shorter or mix marker characters", () => {
+  for (const marker of ["`", "~"]) {
+    const other = marker === "`" ? "~" : "`";
+    for (const closing of [marker.repeat(3), marker.repeat(4) + other]) {
+      const branch = [assistant(`${marker.repeat(4)}bash\necho incomplete\n${closing}`)];
+      assert.equal(lastShellBlock(branch), undefined);
+      assert.equal(lastCodeBlock(branch), undefined);
+    }
+  }
+});
+
+test("does not copy nested shell examples from a non-shell fence with a longer close", () => {
+  const nested = "```bash\necho example\n```";
+  const branch = [
+    assistant("```sh\necho safe\n```"),
+    assistant(`\`\`\`\`markdown\n${nested}\n\`\`\`\`\``),
+  ];
+  assert.equal(lastShellBlock(branch), "echo safe");
+  assert.equal(lastCodeBlock(branch), nested);
+});
+
 test("copy-code leaves the clipboard alone without a complete block", async () => {
   let copied = false;
   const { run, notices } = commandFixture(async () => { copied = true; });
