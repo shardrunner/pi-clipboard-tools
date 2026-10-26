@@ -1,5 +1,7 @@
 # Clipboard tools
 
+> **Disclaimer:** This extension is vibe coded for personal use. Use at your own risk.
+
 Copy code and previous prompts from [Pi](https://pi.dev) without picking up the
 terminal's visual line wrapping. Commands copy the original conversation text;
 they never execute it.
@@ -43,11 +45,6 @@ pi install /absolute/path/to/pi-clipboard-tools
 Pi loads a local package in place (no copy) and this package has no runtime
 dependencies, so no `npm install` is needed to use it. Run `/reload` in existing
 Pi instances. Try it once without installing via `pi -e /absolute/path/to/clipboard-tools`.
-
-## Project status
-
-Developed with AI assistance for personal use. Provided as-is, without support or
-compatibility guarantees. Review the source and documented limitations before use.
 
 ## Development
 
